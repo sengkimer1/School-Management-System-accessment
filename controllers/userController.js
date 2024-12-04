@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
 
-const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = process.env.JWT_SECRET;
 
 export const registerUser = async (req, res) => {
     const { fullname, email, password } = req.body;
