@@ -2,12 +2,11 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
 
-const SECRET_KEY = process.env.JWT_SECRET;
-
+const SECRET_KEY = process.env.JWT_SECRET  || "yourSecretKey";
 export const registerUser = async (req, res) => {
-    const { fullname, email, password } = req.body;
+    const { fullname, email, password,role='user' } = req.body;
 
-    if (!fullname || !email || !password) {
+    if (!fullname || !email || !password||!role) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -18,6 +17,7 @@ export const registerUser = async (req, res) => {
             fullname,
             email,
             password: hashedPassword,
+            role
         });
 
         await newUser.save();
@@ -101,8 +101,7 @@ export const updateUser = async (req, res) => {
     } catch (error) {
         console.error("Error updating user:", error.message);
         return res.status(500).json({
-            error: "An error updating user"
-        });
+            error: "An error occurred while updating user" });
     }
 }
 export const deleteUser = async (req, res) => {
@@ -110,10 +109,10 @@ export const deleteUser = async (req, res) => {
         const id = req.params.id;
         await userModel.findByIdAndDelete(id);
         return res.status(200).json({ message: "User deleted successfully" });
-    } catch (error) {
-        console.error("Error deleting user:", error.message);
-        return res.status(500).json({
-            error: "An error deleting user"
-        });
-    }
-}
+        } catch (error) {
+            console.error("Error deleting user:", error.message);
+            return res.status(500).json({
+                error: "An error occurred while deleting user"
+                });
+                }
+                }
